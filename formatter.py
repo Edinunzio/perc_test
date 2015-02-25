@@ -22,12 +22,8 @@ class Formatter(object):
         """analyzes each entry"""
         for entry in container:
             if len(entry) == 4:
-                print "4"
-                print entry
                 self.entries.append(entry)
             elif len(entry) == 5:
-                print "5"
-                print entry
                 self.entries.append(entry)
             else:
                 self.errors.append(container.index(entry))
