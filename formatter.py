@@ -21,10 +21,30 @@ class Formatter(object):
     def analyze_entry(self, container):
         """analyzes each entry"""
         for entry in container:
+            _entry = {}
             if len(entry) == 4:
-                self.entries.append(entry)
+                name = entry[0].split(" ")
+                _entry["first_name"] = name[0]
+                _entry["last_name"] = name[1]
+                _entry["color"] = entry[1]
+                _entry["zipcode"] = entry[2]
+                _entry["phonenumber"] = entry[3]
+                self.entries.append(_entry)
             elif len(entry) == 5:
-                self.entries.append(entry)
+                if "(" in entry[2]:
+                    _entry["first_name"] = entry[1]
+                    _entry["last_name"] = entry[0]
+                    _entry["color"] = entry[3]
+                    _entry["zipcode"] = entry[4]
+                    _entry["phonenumber"] = entry[2]
+                    self.entries.append(_entry)
+                else:
+                    _entry["first_name"] = entry[0]
+                    _entry["last_name"] = entry[1]
+                    _entry["color"] = entry[4]
+                    _entry["zipcode"] = entry[2]
+                    _entry["phonenumber"] = entry[3]
+                    self.entries.append(_entry)
             else:
                 self.errors.append(container.index(entry))
         return self.errors, self.entries
