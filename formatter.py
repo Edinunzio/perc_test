@@ -1,7 +1,6 @@
 import json
 
 
-
 class Formatter(object):
     def __init__(self):
         self.entries = []
@@ -12,7 +11,7 @@ class Formatter(object):
         reads file
         f = _fm.read_file(filename)
         :param filename: str
-        :return: txt: string of file content
+        :return: txt: str
         """
         f = open(filename, 'r')
         txt = f.read()
@@ -25,7 +24,7 @@ class Formatter(object):
         stores line_count for test_line_count_equals_entry_count
         container = _fm.get_entries_by_line(file_contents)
         :param file_contents: str
-        :return: container: list of entry per line
+        :return: container: list
         """
         _entries = file_contents.split("\n")
         container = []
@@ -45,7 +44,7 @@ class Formatter(object):
         invalid entries are appended to self.errors
         output = _fm.analyze_entry(container)
         :param container: list
-        :return: output: dict
+        :return: results: dict
         """
         for entry in container:
             _entry = {}
@@ -82,7 +81,8 @@ class Formatter(object):
         sorted_entries = sorted(self.entries, key=lambda k: k["last_name"], reverse=False)
         self.entries = sorted_entries
         output = {"entries": self.entries, "errors": self.errors}
-        return output
+        results = json.dumps(output, sort_keys=True, indent=2)
+        return results
 
     def validate_phonenumber(self, phone, ind):
         """
@@ -148,13 +148,21 @@ class Formatter(object):
                 self.errors.append(ind)
                 return None
 
+    def output_results(self, op_filename, _json):
+        """
+        writes and saves _json to op_filename
+        :param op_filename: str
+        :param _json: str
+        :return: result.out: json obj
+        """
+        f = open(op_filename, 'w')
+        f.write(_json)
+        f.close()
+
 
 if __name__ == '__main__':
-    _fm = Formatter()
-    r_f = _fm.read_file('data/sample-Liz.in')
-    entries = _fm.get_entries_by_line(r_f)
-    result = _fm.analyze_entry(entries)
-    result = json.dumps(result, sort_keys=True, indent=2)
-    x = open('data/result.out', 'w')
-    x.write(result)
-    x.close()
+    frm = Formatter()
+    r_f = frm.read_file('data/sample-Liz.in')
+    entries = frm.get_entries_by_line(r_f)
+    result = frm.analyze_entry(entries)
+    frm.output_results("data/result.out", result)
