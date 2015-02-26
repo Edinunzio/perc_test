@@ -95,8 +95,7 @@ class Formatter(object):
                 _entry["color"] = self.validate_str(entry[1], entry_index)
                 _entry["zipcode"] = self.validate_zipcode(entry[2], entry_index)
                 _entry["phonenumber"] = self.validate_phonenumber(entry[3], entry_index)
-                if None not in _entry.itervalues():
-                    self.entries.append(_entry)
+                self.validate_entry(_entry)
             elif len(entry) == 5:
                 if "(" in entry[2]:
                     _entry["first_name"] = self.validate_str(entry[1], entry_index)
@@ -104,16 +103,14 @@ class Formatter(object):
                     _entry["color"] = self.validate_str(entry[3], entry_index)
                     _entry["zipcode"] = self.validate_zipcode(entry[4], entry_index)
                     _entry["phonenumber"] = self.validate_phonenumber(entry[2], entry_index)
-                    if None not in _entry.itervalues():
-                        self.entries.append(_entry)
+                    self.validate_entry(_entry)
                 else:
                     _entry["first_name"] = self.validate_str(entry[0], entry_index)
                     _entry["last_name"] = self.validate_str(entry[1], entry_index)
                     _entry["color"] = self.validate_str(entry[4], entry_index)
                     _entry["zipcode"] = self.validate_zipcode(entry[2], entry_index)
                     _entry["phonenumber"] = self.validate_phonenumber(entry[3], entry_index)
-                    if None not in _entry.itervalues():
-                        self.entries.append(_entry)
+                    self.validate_entry(_entry)
             else:
                 self.errors.append(container.index(entry))
         self.errors = list(set(self.errors))  # remove duplicate invalid entries
@@ -123,6 +120,10 @@ class Formatter(object):
         output = {"entries": self.entries, "errors": self.errors}
         results = json.dumps(output, sort_keys=True, indent=2)
         return results
+
+    def validate_entry(self, _entry):
+        if None not in _entry.itervalues():
+            self.entries.append(_entry)
 
     def validate_phonenumber(self, phone, ind):
         """
