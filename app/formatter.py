@@ -174,9 +174,19 @@ class Formatter(object):
         opened_file.close()
 
 
-if __name__ == '__main__':
+def process_file(in_put, out_put):
+    """
+    runs application
+    :param in_put: str
+    :param out_put: str
+    :return:
+    """
     _formatter = Formatter()
-    r_f = _formatter.read_file('../data/sample-Liz.in')
-    entries = _formatter.get_entries_by_line(r_f)
+    read_input = _formatter.read_file(in_put)
+    entries = _formatter.get_entries_by_line(read_input)
     result = _formatter.analyze_entry(entries)
-    _formatter.output_results("../data/result.out", result)
+    _formatter.output_results(out_put, result)
+
+
+if __name__ == '__main__':
+    process_file("../data/sample-Liz.in", "../data/result.out")
