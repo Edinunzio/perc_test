@@ -113,7 +113,8 @@ class Formatter(object):
                     self.validate_entry(_entry)
             else:
                 self.errors.append(container.index(entry))
-        self.errors = list(set(self.errors))  # remove duplicate invalid entries
+        # remove duplicate errors
+        self.errors = list(set(self.errors))
         self.entry_count = len(self.entries) + len(self.errors)
         sorted_entries = sorted(self.entries, key=lambda k: k["last_name"], reverse=False)
         self.entries = sorted_entries
@@ -122,6 +123,10 @@ class Formatter(object):
         return results
 
     def validate_entry(self, _entry):
+        """
+        checks if any attributes == None
+        :param _entry: dict
+        """
         if None not in _entry.itervalues():
             self.entries.append(_entry)
 
@@ -176,7 +181,7 @@ class Formatter(object):
         string = self.validate_str(name[0], container.index(entry))
         :param label: string
         :param ind: int
-        :return: s: str or None
+        :return: label: str or None
         """
         try:
             label = int(label)
@@ -210,7 +215,7 @@ def process_file(in_put, out_put):
     process_file("../data/sample-Liz.in", "../data/result.out")
     :param in_put: str
     :param out_put: str
-    :return:
+    :return: result.out
     """
     _formatter = Formatter()
     read_input = _formatter.read_file(in_put)
