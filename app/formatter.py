@@ -9,6 +9,27 @@ import json
 from functools import wraps
 
 
+def timefn(fn):
+    """
+    profiling/logging helper measuring execution speed
+    :param self: function
+    :return: str: print statement
+    """
+
+    @wraps(fn)
+    def measure_time(*args, **kwargs):
+        """
+        prints time elapsed per wrapped function in console
+        """
+        beg = time.time()
+        result = fn(*args, **kwargs)
+        end = time.time()
+        print "@timefn:" + fn.func_name + " took " + str(end - beg) + " seconds"
+        return result
+
+    return measure_time
+
+
 class Formatter(object):
     """
     formatter
@@ -20,26 +41,6 @@ class Formatter(object):
         self.errors = []
         self.line_count = None
         self.entry_count = None
-
-    def timefn(self):
-        """
-        profiling/logging helper measuring execution speed
-        :param self: function
-        :return: str: print statement
-        """
-
-        @wraps(self)
-        def measure_time(*args, **kwargs):
-            """
-            prints time elapsed per wrapped function in console
-            """
-            t1 = time.time()
-            result = self(*args, **kwargs)
-            t2 = time.time()
-            print "@timefn:" + self.func_name + " took " + str(t2 - t1) + " seconds"
-            return result
-
-        return measure_time
 
 
     @staticmethod
@@ -228,7 +229,7 @@ def process_file(in_put, out_put):
     _formatter = Formatter()
     read_input = _formatter.read_file(in_put)
     entries = _formatter.get_entries_by_line(read_input)
-    result = _formatter.validate_entries(entries)
+    _formatter.validate_entries(entries)
     results = _formatter.format_output()
     _formatter.output_results(out_put, results)
 
