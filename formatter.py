@@ -1,3 +1,6 @@
+import json
+import collections
+
 class Formatter(object):
     def __init__(self):
         self.entries = []
@@ -24,30 +27,69 @@ class Formatter(object):
             _entry = {}
             if len(entry) == 4:
                 name = entry[0].split(" ")
-                _entry["first_name"] = name[0]
-                _entry["last_name"] = name[1]
-                _entry["color"] = entry[1]
-                _entry["zipcode"] = entry[2]
-                _entry["phonenumber"] = entry[3]
-                self.entries.append(_entry)
+                _entry["first_name"] = self.validate_str(name[0], container.index(entry))
+                _entry["last_name"] = self.validate_str(name[1], container.index(entry))
+                _entry["color"] = self.validate_str(entry[1], container.index(entry))
+                _entry["zipcode"] = self.validate_zipcode(entry[2], container.index(entry))
+                _entry["phonenumber"] = self.validate_phonenumber(entry[3], container.index(entry))
+                """if _entry["phonenumber"] != None:
+                    self.entries.append(_entry)"""
+                if None not in _entry.itervalues():
+                    self.entries.append(_entry)
             elif len(entry) == 5:
                 if "(" in entry[2]:
-                    _entry["first_name"] = entry[1]
-                    _entry["last_name"] = entry[0]
-                    _entry["color"] = entry[3]
-                    _entry["zipcode"] = entry[4]
-                    _entry["phonenumber"] = entry[2]
-                    self.entries.append(_entry)
+                    _entry["first_name"] = self.validate_str(entry[1], container.index(entry))
+                    _entry["last_name"] = self.validate_str(entry[0], container.index(entry))
+                    _entry["color"] = self.validate_str(entry[3], container.index(entry))
+                    _entry["zipcode"] = self.validate_zipcode(entry[4], container.index(entry))
+                    _entry["phonenumber"] = self.validate_phonenumber(entry[2], container.index(entry))
+                    """if _entry["phonenumber"] != None:
+                    self.entries.append(_entry)"""
+                    if None not in _entry.itervalues():
+                        self.entries.append(_entry)
                 else:
-                    _entry["first_name"] = entry[0]
-                    _entry["last_name"] = entry[1]
-                    _entry["color"] = entry[4]
-                    _entry["zipcode"] = entry[2]
-                    _entry["phonenumber"] = entry[3]
-                    self.entries.append(_entry)
+                    _entry["first_name"] = self.validate_str(entry[0], container.index(entry))
+                    _entry["last_name"] = self.validate_str(entry[1], container.index(entry))
+                    _entry["color"] = self.validate_str(entry[4], container.index(entry))
+                    _entry["zipcode"] = self.validate_zipcode(entry[2], container.index(entry))
+                    _entry["phonenumber"] = self.validate_phonenumber(entry[3], container.index(entry))
+                    """if _entry["phonenumber"] != None:
+                        self.entries.append(_entry)"""
+                    if None not in _entry.itervalues():
+                        self.entries.append(_entry)
             else:
                 self.errors.append(container.index(entry))
-        return self.errors, self.entries
+        output = {"entries": self.entries, "errors": self.errors}
+        json_output = json.dumps(output)
+        return output
+
+    def validate_phonenumber(self, phone, ind):
+        phone = phone.replace("(", "")
+        phone = phone.replace(")", "")
+        phone = phone.replace("-", "")
+        phone = phone.replace(" ", "")
+        if len(phone) == 10:
+            return str(phone[0:3]) + "-" + str(phone[3:6]) + "-" + str(phone[6:])
+        else:
+            self.errors.append(ind)
+            return None
+
+    def validate_zipcode(self, zipcode, ind):
+        zipcode = zipcode.replace(" ", "")
+        if len(zipcode) == 5:
+            return zipcode
+        else:
+            self.errors.append(ind)
+            return None
+
+    def validate_str(self, string, ind):
+        if type(string) == str:
+            return string.strip()
+        else:
+            self.errors.append(ind)
+            return None
+
+
 
 
 if __name__ == '__main__':
@@ -59,3 +101,7 @@ if __name__ == '__main__':
     result = _fm.analyze_entry(entries)
     #result = _fm.get_entries_by_line(r_f)
     print result
+    result = json.dumps(result)
+    x = open('liz_test.json', 'w')
+    x.write(result)
+    x.close()
