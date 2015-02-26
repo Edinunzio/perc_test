@@ -4,10 +4,6 @@ from app.formatter import Formatter
 
 
 class TestFormatter(unittest.TestCase):
-    """
-    unit tests for Formatter
-    """
-
     def setUp(self):
         self.fm = Formatter()
         self.contents = self.fm.read_file('../data/sample-Liz.in')

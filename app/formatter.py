@@ -4,7 +4,7 @@ Percolate Coding Challenge!
 import json
 
 
-class Formatter():
+class Formatter(object):
     """
     formatter
     :returns result.out
@@ -17,16 +17,17 @@ class Formatter():
         self.entry_count = None
 
 
-    def read_file(self, filename):
+    @staticmethod
+    def read_file(filename):
         """
         reads file
         f = _fm.read_file(filename)
         :param filename: str
         :return: txt: str
         """
-        with open(filename, 'r') as f:
-            txt = f.read()
-        f.close()
+        with open(filename, 'r') as opened_file:
+            txt = opened_file.read()
+        opened_file.close()
         return txt
 
     def get_entries_by_line(self, file_contents):
@@ -39,8 +40,8 @@ class Formatter():
         """
         _entries = file_contents.split("\n")
         container = []
-        for e in _entries:
-            item = e.split(",")
+        for _entry in _entries:
+            item = _entry.split(",")
             container.append(item)
         self.line_count = len(container)
         return container
@@ -139,42 +140,43 @@ class Formatter():
         except ValueError:
             self.errors.append(ind)
 
-    def validate_str(self, s, ind):
+    def validate_str(self, label, ind):
         """
         normalizes string output
         tests if string could be an integer
         invalid if type is not string
         string = self.validate_str(name[0], container.index(entry))
-        :param s: string
+        :param label: string
         :param ind: int
         :return: s: str or None
         """
         try:
-            s = int(s)
+            label = int(label)
             self.errors.append(ind)
             return None
         except ValueError:
-            if type(s) == str:
-                return s.strip()
+            if type(label) == str:
+                return label.strip()
             else:
                 self.errors.append(ind)
                 return None
 
-    def output_results(self, op_filename, _json):
+    @staticmethod
+    def output_results(op_filename, _json):
         """
         writes and saves _json to op_filename
         :param op_filename: str
         :param _json: str
         :return: result.out: json obj
         """
-        with open(op_filename, 'w') as f:
-            f.write(_json)
-        f.close()
+        with open(op_filename, 'w') as opened_file:
+            opened_file.write(_json)
+        opened_file.close()
 
 
 if __name__ == '__main__':
-    frm = Formatter()
-    r_f = frm.read_file('../data/sample-Liz.in')
-    entries = frm.get_entries_by_line(r_f)
-    result = frm.analyze_entry(entries)
-    frm.output_results("../data/result.out", result)
+    _formatter = Formatter()
+    r_f = _formatter.read_file('../data/sample-Liz.in')
+    entries = _formatter.get_entries_by_line(r_f)
+    result = _formatter.analyze_entry(entries)
+    _formatter.output_results("../data/result.out", result)
