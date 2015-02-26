@@ -8,7 +8,7 @@ class TestFormatter(unittest.TestCase):
         self.fm = Formatter()
         self.contents = self.fm.read_file('../data/sample-Liz.in')
         self._entries = self.fm.get_entries_by_line(self.contents)
-        self._analyzed = self.fm.analyze_entry(self._entries)
+        self._v_entries = self.fm.validate_entries(self._entries)
         self._format_output = self.fm.format_output()
 
 

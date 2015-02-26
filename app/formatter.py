@@ -73,7 +73,7 @@ class Formatter(object):
         return container
 
     @timefn
-    def analyze_entry(self, container):
+    def validate_entries(self, container):
         """
         validates each entry
         valid formats:
@@ -81,7 +81,7 @@ class Formatter(object):
             2. firstname lastname, color, #####, ### ### ####
             3. firstname, lastname, #####, ### ### ####, color
         invalid entries are appended to self.errors
-        output = _fm.analyze_entry(container)
+        output = _fm.validate_entries(container)
         :param container: list
         :return: results: dict
         """
@@ -229,7 +229,7 @@ def process_file(in_put, out_put):
     _formatter = Formatter()
     read_input = _formatter.read_file(in_put)
     entries = _formatter.get_entries_by_line(read_input)
-    result = _formatter.analyze_entry(entries)
+    result = _formatter.validate_entries(entries)
     results = _formatter.format_output()
     _formatter.output_results(out_put, results)
 
