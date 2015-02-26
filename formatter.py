@@ -32,8 +32,6 @@ class Formatter(object):
                 _entry["color"] = self.validate_str(entry[1], container.index(entry))
                 _entry["zipcode"] = self.validate_zipcode(entry[2], container.index(entry))
                 _entry["phonenumber"] = self.validate_phonenumber(entry[3], container.index(entry))
-                """if _entry["phonenumber"] != None:
-                    self.entries.append(_entry)"""
                 if None not in _entry.itervalues():
                     self.entries.append(_entry)
             elif len(entry) == 5:
@@ -43,8 +41,6 @@ class Formatter(object):
                     _entry["color"] = self.validate_str(entry[3], container.index(entry))
                     _entry["zipcode"] = self.validate_zipcode(entry[4], container.index(entry))
                     _entry["phonenumber"] = self.validate_phonenumber(entry[2], container.index(entry))
-                    """if _entry["phonenumber"] != None:
-                    self.entries.append(_entry)"""
                     if None not in _entry.itervalues():
                         self.entries.append(_entry)
                 else:
@@ -53,8 +49,6 @@ class Formatter(object):
                     _entry["color"] = self.validate_str(entry[4], container.index(entry))
                     _entry["zipcode"] = self.validate_zipcode(entry[2], container.index(entry))
                     _entry["phonenumber"] = self.validate_phonenumber(entry[3], container.index(entry))
-                    """if _entry["phonenumber"] != None:
-                        self.entries.append(_entry)"""
                     if None not in _entry.itervalues():
                         self.entries.append(_entry)
             else:
@@ -94,14 +88,12 @@ class Formatter(object):
 
 if __name__ == '__main__':
     _fm = Formatter()
-    #result = _fm.read_file('data/empty.txt')
+    #r_f = _fm.read_file('data/empty.txt')
     r_f = _fm.read_file('data/sample-Liz.in')
     entries = _fm.get_entries_by_line(r_f)
-    #result = entries
     result = _fm.analyze_entry(entries)
-    #result = _fm.get_entries_by_line(r_f)
     print result
-    result = json.dumps(result)
+    result = json.dumps(result, sort_keys=True, indent=2)
     x = open('liz_test.json', 'w')
     x.write(result)
     x.close()

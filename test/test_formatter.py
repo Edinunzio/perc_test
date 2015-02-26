@@ -8,7 +8,6 @@ class TestFormatter(unittest.TestCase):
         self.contents = self.fm.read_file('../data/sample-Liz.in')
 
     def test_read_file_method_returns_correct_type(self):
-        #self.assertEqual(str, type(self.fm.read_file('../data/empty.txt')))
         self.assertEqual(str, type(self.contents))
 
     def test_read_file_method_returns_not_empty(self):
