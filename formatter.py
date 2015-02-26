@@ -19,6 +19,7 @@ class Formatter(object):
         for e in entries:
             x = e.split(",")
             container.append(x)
+        self.line_count = len(container)
         return container
 
     def analyze_entry(self, container):
@@ -53,8 +54,9 @@ class Formatter(object):
                         self.entries.append(_entry)
             else:
                 self.errors.append(container.index(entry))
+        self.errors = list(set(self.errors)) # remove duplicate invalid entries
+        self.entry_count = len(self.entries) + len(self.errors)
         output = {"entries": self.entries, "errors": self.errors}
-        json_output = json.dumps(output)
         return output
 
     def validate_phonenumber(self, phone, ind):
@@ -88,11 +90,10 @@ class Formatter(object):
 
 if __name__ == '__main__':
     _fm = Formatter()
-    #r_f = _fm.read_file('data/empty.txt')
     r_f = _fm.read_file('data/sample-Liz.in')
     entries = _fm.get_entries_by_line(r_f)
     result = _fm.analyze_entry(entries)
-    print result
+    #print result
     result = json.dumps(result, sort_keys=True, indent=2)
     x = open('liz_test.json', 'w')
     x.write(result)
