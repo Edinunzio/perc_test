@@ -83,7 +83,6 @@ class Formatter(object):
         invalid entries are appended to self.errors
         output = _fm.validate_entries(container)
         :param container: list
-        :return: results: dict
         """
         for entry in container:
             entry_index = container.index(entry)
@@ -199,7 +198,7 @@ class Formatter(object):
         sorted_entries = sorted(self.entries, key=lambda k: k["last_name"], reverse=False)
         self.entries = sorted_entries
         output = {"entries": self.entries, "errors": self.errors}
-        # formating to json per requirements
+        # formatting to json per requirements
         results = json.dumps(output, sort_keys=True, indent=2)
         return results
 
