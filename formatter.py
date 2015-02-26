@@ -6,19 +6,19 @@ class Formatter(object):
         self.entries = []
         self.errors = []
 
-    def read_file(self, file):
-        f = open(file, 'r')
+    def read_file(self, filename):
+        f = open(filename, 'r')
         txt = f.read()
         f.close()
         return txt
 
     def get_entries_by_line(self, file_contents):
         """grabs content of each line and appended to array"""
-        entries = file_contents.split("\n")
+        _entries = file_contents.split("\n")
         container = []
-        for e in entries:
-            x = e.split(",")
-            container.append(x)
+        for e in _entries:
+            item = e.split(",")
+            container.append(item)
         self.line_count = len(container)
         return container
 
@@ -104,8 +104,7 @@ if __name__ == '__main__':
     r_f = _fm.read_file('data/sample-Liz.in')
     entries = _fm.get_entries_by_line(r_f)
     result = _fm.analyze_entry(entries)
-    # print result
     result = json.dumps(result, sort_keys=True, indent=2)
-    x = open('liz_test.json', 'w')
+    x = open('result.out', 'w')
     x.write(result)
     x.close()
