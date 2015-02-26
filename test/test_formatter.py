@@ -1,4 +1,5 @@
 import unittest
+
 from formatter import Formatter
 
 
@@ -21,6 +22,7 @@ class TestFormatter(unittest.TestCase):
 
     def test_line_count_equals_entry_count(self):
         self.assertEqual(self.fm.line_count, self.fm.entry_count)
+
 
 if __name__ == '__main__':
     unittest.main()
