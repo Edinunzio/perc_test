@@ -1,5 +1,4 @@
 import json
-import collections
 
 class Formatter(object):
     def __init__(self):
@@ -64,26 +63,39 @@ class Formatter(object):
         phone = phone.replace(")", "")
         phone = phone.replace("-", "")
         phone = phone.replace(" ", "")
-        if len(phone) == 10:
-            return str(phone[0:3]) + "-" + str(phone[3:6]) + "-" + str(phone[6:])
-        else:
+        try:
+            phone = str(int(phone))
+            if len(phone) == 10:
+                return str(phone[0:3]) + "-" + str(phone[3:6]) + "-" + str(phone[6:])
+            else:
+                self.errors.append(ind)
+                return None
+        except ValueError:
             self.errors.append(ind)
-            return None
 
     def validate_zipcode(self, zipcode, ind):
         zipcode = zipcode.replace(" ", "")
-        if len(zipcode) == 5:
-            return zipcode
-        else:
+        try:
+            zipcode = str(int(zipcode))
+            if len(zipcode) == 5:
+                return str(zipcode)
+            else:
+                self.errors.append(ind)
+                return None
+        except ValueError:
             self.errors.append(ind)
-            return None
 
     def validate_str(self, string, ind):
-        if type(string) == str:
-            return string.strip()
-        else:
+        try:
+            string = int(string)
             self.errors.append(ind)
             return None
+        except ValueError:
+            if type(string) == str:
+                return string.strip()
+            else:
+                self.errors.append(ind)
+                return None
 
 
 
