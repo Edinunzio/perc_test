@@ -9,6 +9,7 @@ class TestFormatter(unittest.TestCase):
         self.contents = self.fm.read_file('../data/sample-Liz.in')
         self._entries = self.fm.get_entries_by_line(self.contents)
         self._analyzed = self.fm.analyze_entry(self._entries)
+        self._format_output = self.fm.format_output()
 
 
     def test_read_file_method_returns_correct_type(self):

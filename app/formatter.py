@@ -59,7 +59,6 @@ class Formatter(object):
     def get_entries_by_line(self, file_contents):
         """
         grabs content of each line and appends to list
-        stores line_count for test_line_count_equals_entry_count
         container = _fm.get_entries_by_line(file_contents)
         :param file_contents: str
         :return: container: list
@@ -69,6 +68,7 @@ class Formatter(object):
         for _entry in _entries:
             item = _entry.split(",")
             container.append(item)
+        # stores line_count for test_line_count_equals_entry_count
         self.line_count = len(container)
         return container
 
@@ -113,14 +113,6 @@ class Formatter(object):
                     self.validate_entry(_entry)
             else:
                 self.errors.append(container.index(entry))
-        # remove duplicate errors
-        self.errors = list(set(self.errors))
-        self.entry_count = len(self.entries) + len(self.errors)
-        sorted_entries = sorted(self.entries, key=lambda k: k["last_name"], reverse=False)
-        self.entries = sorted_entries
-        output = {"entries": self.entries, "errors": self.errors}
-        results = json.dumps(output, sort_keys=True, indent=2)
-        return results
 
     def validate_entry(self, _entry):
         """
@@ -194,6 +186,23 @@ class Formatter(object):
                 self.errors.append(ind)
                 return None
 
+    def format_output(self):
+        """
+        formats output to json
+        :return: results: str
+        """
+        # remove duplicate errors
+        self.errors = list(set(self.errors))
+        # stores entry_count for test_line_count_equals_entry_count
+        self.entry_count = len(self.entries) + len(self.errors)
+        # sorting entries alphabetically ascending by last name
+        sorted_entries = sorted(self.entries, key=lambda k: k["last_name"], reverse=False)
+        self.entries = sorted_entries
+        output = {"entries": self.entries, "errors": self.errors}
+        # formating to json per requirements
+        results = json.dumps(output, sort_keys=True, indent=2)
+        return results
+
     @staticmethod
     def output_results(op_filename, _json):
         """
@@ -221,7 +230,8 @@ def process_file(in_put, out_put):
     read_input = _formatter.read_file(in_put)
     entries = _formatter.get_entries_by_line(read_input)
     result = _formatter.analyze_entry(entries)
-    _formatter.output_results(out_put, result)
+    results = _formatter.format_output()
+    _formatter.output_results(out_put, results)
 
 
 if __name__ == '__main__':
