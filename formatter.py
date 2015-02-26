@@ -1,19 +1,32 @@
 import json
 
 
+
 class Formatter(object):
     def __init__(self):
         self.entries = []
         self.errors = []
 
     def read_file(self, filename):
+        """
+        reads file
+        f = _fm.read_file(filename)
+        :param filename: str
+        :return: txt: string of file content
+        """
         f = open(filename, 'r')
         txt = f.read()
         f.close()
         return txt
 
     def get_entries_by_line(self, file_contents):
-        """grabs content of each line and appended to array"""
+        """
+        grabs content of each line and appends to list
+        stores line_count for test_line_count_equals_entry_count
+        container = _fm.get_entries_by_line(file_contents)
+        :param file_contents: str
+        :return: container: list of entry per line
+        """
         _entries = file_contents.split("\n")
         container = []
         for e in _entries:
@@ -23,7 +36,17 @@ class Formatter(object):
         return container
 
     def analyze_entry(self, container):
-        """analyzes each entry"""
+        """
+        validates each entry
+        valid formats:
+            1. lastname, firstname, (###)-###-####, color, #####
+            2. firstname lastname, color, #####, ### ### ####
+            3. firstname, lastname, #####, ### ### ####, color
+        invalid entries are appended to self.errors
+        output = _fm.analyze_entry(container)
+        :param container: list
+        :return: output: dict
+        """
         for entry in container:
             _entry = {}
             if len(entry) == 4:
@@ -56,10 +79,20 @@ class Formatter(object):
                 self.errors.append(container.index(entry))
         self.errors = list(set(self.errors))  # remove duplicate invalid entries
         self.entry_count = len(self.entries) + len(self.errors)
+        sorted_entries = sorted(self.entries, key=lambda k: k["last_name"], reverse=False)
+        self.entries = sorted_entries
         output = {"entries": self.entries, "errors": self.errors}
         return output
 
     def validate_phonenumber(self, phone, ind):
+        """
+        normalizes phone output
+        invalid phone are letters or lengths not equal to 10
+        phonenumber = self.validate_phonenumber(phone, ind)
+        :param phone: str
+        :param ind: int
+        :return: phone: str or None
+        """
         phone = phone.replace("(", "")
         phone = phone.replace(")", "")
         phone = phone.replace("-", "")
@@ -75,6 +108,14 @@ class Formatter(object):
             self.errors.append(ind)
 
     def validate_zipcode(self, zipcode, ind):
+        """
+        normalizes zipcode output
+        invalid zipcode are letters or lengths not equal to 5
+        zipcode = self.validate_zipcode(zipcode, ind)
+        :param zipcode: str
+        :param ind: int
+        :return: zipcode: str or None
+        """
         zipcode = zipcode.replace(" ", "")
         try:
             zipcode = str(int(zipcode))
@@ -86,14 +127,23 @@ class Formatter(object):
         except ValueError:
             self.errors.append(ind)
 
-    def validate_str(self, string, ind):
+    def validate_str(self, s, ind):
+        """
+        normalizes string output
+        tests if string could be an integer
+        invalid if type is not string
+        string = self.validate_str(name[0], container.index(entry))
+        :param s: string
+        :param ind: int
+        :return: s: str or None
+        """
         try:
-            string = int(string)
+            s = int(s)
             self.errors.append(ind)
             return None
         except ValueError:
-            if type(string) == str:
-                return string.strip()
+            if type(s) == str:
+                return s.strip()
             else:
                 self.errors.append(ind)
                 return None
@@ -105,6 +155,6 @@ if __name__ == '__main__':
     entries = _fm.get_entries_by_line(r_f)
     result = _fm.analyze_entry(entries)
     result = json.dumps(result, sort_keys=True, indent=2)
-    x = open('result.out', 'w')
+    x = open('data/result.out', 'w')
     x.write(result)
     x.close()
