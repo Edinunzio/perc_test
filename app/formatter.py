@@ -1,10 +1,21 @@
+"""
+Percolate Coding Challenge!
+"""
 import json
 
 
-class Formatter(object):
+class Formatter():
+    """
+    formatter
+    :returns result.out
+    """
+
     def __init__(self):
         self.entries = []
         self.errors = []
+        self.line_count = None
+        self.entry_count = None
+
 
     def read_file(self, filename):
         """
@@ -13,8 +24,8 @@ class Formatter(object):
         :param filename: str
         :return: txt: str
         """
-        f = open(filename, 'r')
-        txt = f.read()
+        with open(filename, 'r') as f:
+            txt = f.read()
         f.close()
         return txt
 
@@ -47,31 +58,32 @@ class Formatter(object):
         :return: results: dict
         """
         for entry in container:
+            entry_index = container.index(entry)
             _entry = {}
             if len(entry) == 4:
                 name = entry[0].split(" ")
-                _entry["first_name"] = self.validate_str(name[0], container.index(entry))
-                _entry["last_name"] = self.validate_str(name[1], container.index(entry))
-                _entry["color"] = self.validate_str(entry[1], container.index(entry))
-                _entry["zipcode"] = self.validate_zipcode(entry[2], container.index(entry))
-                _entry["phonenumber"] = self.validate_phonenumber(entry[3], container.index(entry))
+                _entry["first_name"] = self.validate_str(name[0], entry_index)
+                _entry["last_name"] = self.validate_str(name[1], entry_index)
+                _entry["color"] = self.validate_str(entry[1], entry_index)
+                _entry["zipcode"] = self.validate_zipcode(entry[2], entry_index)
+                _entry["phonenumber"] = self.validate_phonenumber(entry[3], entry_index)
                 if None not in _entry.itervalues():
                     self.entries.append(_entry)
             elif len(entry) == 5:
                 if "(" in entry[2]:
-                    _entry["first_name"] = self.validate_str(entry[1], container.index(entry))
-                    _entry["last_name"] = self.validate_str(entry[0], container.index(entry))
-                    _entry["color"] = self.validate_str(entry[3], container.index(entry))
-                    _entry["zipcode"] = self.validate_zipcode(entry[4], container.index(entry))
-                    _entry["phonenumber"] = self.validate_phonenumber(entry[2], container.index(entry))
+                    _entry["first_name"] = self.validate_str(entry[1], entry_index)
+                    _entry["last_name"] = self.validate_str(entry[0], entry_index)
+                    _entry["color"] = self.validate_str(entry[3], entry_index)
+                    _entry["zipcode"] = self.validate_zipcode(entry[4], entry_index)
+                    _entry["phonenumber"] = self.validate_phonenumber(entry[2], entry_index)
                     if None not in _entry.itervalues():
                         self.entries.append(_entry)
                 else:
-                    _entry["first_name"] = self.validate_str(entry[0], container.index(entry))
-                    _entry["last_name"] = self.validate_str(entry[1], container.index(entry))
-                    _entry["color"] = self.validate_str(entry[4], container.index(entry))
-                    _entry["zipcode"] = self.validate_zipcode(entry[2], container.index(entry))
-                    _entry["phonenumber"] = self.validate_phonenumber(entry[3], container.index(entry))
+                    _entry["first_name"] = self.validate_str(entry[0], entry_index)
+                    _entry["last_name"] = self.validate_str(entry[1], entry_index)
+                    _entry["color"] = self.validate_str(entry[4], entry_index)
+                    _entry["zipcode"] = self.validate_zipcode(entry[2], entry_index)
+                    _entry["phonenumber"] = self.validate_phonenumber(entry[3], entry_index)
                     if None not in _entry.itervalues():
                         self.entries.append(_entry)
             else:
@@ -155,14 +167,14 @@ class Formatter(object):
         :param _json: str
         :return: result.out: json obj
         """
-        f = open(op_filename, 'w')
-        f.write(_json)
+        with open(op_filename, 'w') as f:
+            f.write(_json)
         f.close()
 
 
 if __name__ == '__main__':
     frm = Formatter()
-    r_f = frm.read_file('data/sample-Liz.in')
+    r_f = frm.read_file('../data/sample-Liz.in')
     entries = frm.get_entries_by_line(r_f)
     result = frm.analyze_entry(entries)
-    frm.output_results("data/result.out", result)
+    frm.output_results("../data/result.out", result)
