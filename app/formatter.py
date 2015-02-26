@@ -1,7 +1,12 @@
 """
 Percolate Coding Challenge!
+Normalize entries from data/sample-Liz.in to JSON on data/result.out
+$ cd perc_test/app
+$ python formatter.py
 """
+import time
 import json
+from functools import wraps
 
 
 class Formatter(object):
@@ -15,6 +20,26 @@ class Formatter(object):
         self.errors = []
         self.line_count = None
         self.entry_count = None
+
+    def timefn(self):
+        """
+        profiling/logging helper measuring execution speed
+        :param self: function
+        :return: str: print statement
+        """
+
+        @wraps(self)
+        def measure_time(*args, **kwargs):
+            """
+            prints time elapsed per wrapped function in console
+            """
+            t1 = time.time()
+            result = self(*args, **kwargs)
+            t2 = time.time()
+            print "@timefn:" + self.func_name + " took " + str(t2 - t1) + " seconds"
+            return result
+
+        return measure_time
 
 
     @staticmethod
@@ -30,6 +55,7 @@ class Formatter(object):
         opened_file.close()
         return txt
 
+    @timefn
     def get_entries_by_line(self, file_contents):
         """
         grabs content of each line and appends to list
@@ -46,6 +72,7 @@ class Formatter(object):
         self.line_count = len(container)
         return container
 
+    @timefn
     def analyze_entry(self, container):
         """
         validates each entry
@@ -176,7 +203,10 @@ class Formatter(object):
 
 def process_file(in_put, out_put):
     """
-    runs application
+    reads input
+    analyzes input
+    saves output in json
+    process_file("../data/sample-Liz.in", "../data/result.out")
     :param in_put: str
     :param out_put: str
     :return:
